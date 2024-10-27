@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('location_id')->constrained()->cascadeOnDelete();
-            $table->decimal('transaction_amount', 8, 2)->default(0);
-            $table->dateTime('transaction_date');
+            $table->decimal('transaction_amount', 8, 2)->default(0)->index();
+            $table->dateTime('transaction_date')->index();
 
             $table->timestamps();
         });
