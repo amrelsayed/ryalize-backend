@@ -9,14 +9,16 @@ use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
-    public function index(Request $request, User $user)
+    public function index(Request $request)
     {
         // \DB::enableQueryLog();
         $query = Transaction::query();
 
-        $query->where('user_id', $user->id);
-
         // filter query
+        if ($request->has("user_id")) {
+            $query->where('user_id', $request->id);
+        }
+
         if ($request->has("amount_from")) {
             $query->where("transaction_amount", '>=', $request->amount_from);
         }
@@ -44,6 +46,5 @@ class TransactionController extends Controller
 
         // dd(\DB::getQueryLog());
         return TransactionResource::collection($query->paginate($request->per_page ?? 15));
-
     }
 }
