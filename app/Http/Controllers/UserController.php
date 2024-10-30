@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\User\CreateUserAction;
+use App\Actions\User\DeleteUserAction;
+use App\Actions\User\UpdateUserAction;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
@@ -20,46 +23,31 @@ class UserController extends Controller
 
     }
 
-    public function create(CreateUserRequest $request)
+    public function create(CreateUserRequest $request, CreateUserAction $createUserAction)
     {
-        $data = $request->validated();
+        $validatedData = $request->validated();
 
-        $user = new User();
-        $user->name = $data["name"];
-        $user->email = $data["email"];
-        $user->password = bcrypt($data["password"]);
-        $user->save();
+        $user = $createUserAction->execute($validatedData);
 
         $responseData = new UserResource(resource: $user);
 
         return response()->json(["message" => "User created", "data" => $responseData]);
-
     }
 
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user, UpdateUserAction $updateUserAction)
     {
-        $data = $request->validated();
+        $validatedData = $request->validated();
 
-        $user->name = $data["name"];
-        $user->email = $data["email"];
-
-        if (isset($data["password"])) {
-            $user->password = bcrypt($data["password"]);
-
-        }
-
-        $user->save();
+        $user = $updateUserAction->execute($user, $validatedData);
 
         $responseData = new UserResource(resource: $user);
 
         return response()->json(["message" => "User updated", "data" => $responseData]);
     }
 
-    public function delete(Request $request, User $user)
+    public function delete(Request $request, User $user, DeleteUserAction $deleteUserAction)
     {
-        $user->tokens()->delete();
-
-        $user->delete();
+        $deleteUserAction->execute($user);
 
         return response()->json(["message" => "User deleted"]);
     }
