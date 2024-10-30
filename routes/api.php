@@ -4,10 +4,16 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 
 Route::post("/login", [LoginController::class, 'login'])->name('login');
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function() {
+    Route::get('user', function() {
+        return new UserResource(request()->user());
+    });
+
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::group(['prefix' => 'users'], function () {

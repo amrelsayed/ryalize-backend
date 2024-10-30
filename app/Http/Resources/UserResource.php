@@ -18,6 +18,9 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'transactions_count' => $this->whenCounted('transactions'),
+            'created_at' => date('Y-m-d H:i a', strtotime($this->created_at)),
+            'updated_at' => date('Y-m-d H:i a', strtotime($this->updated_at)),
         ];
     }
 }

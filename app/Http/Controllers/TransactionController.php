@@ -15,34 +15,35 @@ class TransactionController extends Controller
         $query = Transaction::query();
 
         // filter query
-        if ($request->has("user_id")) {
+        if ($request->filled("user_id")) {
             $query->where('user_id', $request->id);
         }
 
-        if ($request->has("amount_from")) {
+        if ($request->filled("amount_from")) {
             $query->where("transaction_amount", '>=', $request->amount_from);
         }
 
-        if ($request->has("amount_to")) {
+        if ($request->filled("amount_to")) {
             $query->where("transaction_amount", '<=', $request->amount_to);
         }
 
-        if ($request->has("date_from")) {
+        if ($request->filled("date_from")) {
             $query->where("transaction_date", '>=', $request->date_from);
         }
 
-        if ($request->has("date_to")) {
+        if ($request->filled("date_to")) {
             $query->where("transaction_date", '<=', $request->date_to);
         }
 
-        if ($request->has("location_id")) {
+        if ($request->filled("location_id")) {
             $query->whereHas("location", function ($query) use ($request) {
                 $query->where("id", $request->location_id);
             });
         }
 
-        // load relations
-        $query->with(['user', 'location']);
+        // order by latest load relations
+        $query->orderBy('id', 'desc')
+            ->with(['user', 'location']);
 
         // dd(\DB::getQueryLog());
         return TransactionResource::collection($query->paginate($request->per_page ?? 15));
