@@ -1,6 +1,6 @@
 # About
 
-Ryalize Backend Api's 
+Ryalize Backend Api's
 
 ## Project Setup
 
@@ -23,6 +23,7 @@ php artisan key:generate
 ```
 
 ### Add DB Connection
+
 After creating MySQL database
 
 Update database credentials in .env file to use your setup credentials
@@ -35,6 +36,7 @@ DB_DATABASE=your_database
 DB_USERNAME=my_sql_user_name
 DB_PASSWORD=my_sql_password
 ```
+
 ### Run migrations and seed data
 
 ```sh
@@ -50,3 +52,19 @@ php artisan serve
 ### For Production
 
 `public/index.php` is the entry point of the application
+
+### To run unit test
+
+```sh
+php artisan test
+```
+
+### For api docs
+
+`http://127.0.0.1:8000/api/documentation`
+
+To update swagger file
+
+```sh
+php artisan l5-swagger:generate
+```
